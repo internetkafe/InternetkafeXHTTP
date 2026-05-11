@@ -1,0 +1,127 @@
+{
+  "log": {
+    "loglevel": "warning"
+  },
+  "dns": {
+    "servers": [
+      {
+        "address": "fakedns",
+        "domains": [
+          "all"
+        ]
+      }
+    ]
+  },
+  "inbounds": [
+    {
+      "tag": "sibir",
+      "port": 47222,
+      "listen": "0.0.0.0",
+      "protocol": "vless",
+      "settings": {
+        "clients": [],
+        "decryption": "none"
+      },
+      "sniffing": {
+        "enabled": true,
+        "routeOnly": true,
+        "destOverride": [
+          "fakedns",
+          "http",
+          "tls",
+          "quic"
+        ]
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "security": "reality",
+        "xhttpSettings": {
+          "host": "sempre.moscow",
+          "mode": "auto",
+          "path": "/",
+          "headers": {
+            "accept": "*/*",
+            ":method": "GET",
+            ":scheme": "https",
+            ":authority": "sempre.moscow",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+            "accept-encoding": "gzip, deflate, br",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          },
+          "xPaddingBytes": "100-1000"
+        },
+        "realitySettings": {
+          "target": "sempre.moscow:443",
+          "shortIds": [
+            "6789f9d3",
+            "75bbdee9",
+            "0b2952442a",
+            "6572"
+          ],
+          "privateKey": "yourprivatekey",
+          "serverNames": [
+            "sempre.moscow"
+          ]
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "direct",
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIPv4"
+      }
+    },
+    {
+      "tag": "block",
+      "protocol": "blackhole"
+    }
+  ],
+  "routing": {
+    "rules": [
+      {
+        "ip": [
+          "198.18.0.0/15"
+        ],
+        "type": "field",
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "protocol": [
+          "bittorrent"
+        ],
+        "outboundTag": "block"
+      }
+    ],
+    "domainStrategy": "IPIfNonMatch"
+  },
+  "policy": {
+    "levels": {
+      "0": {
+        "connIdle": 300,
+        "handshake": 4,
+        "bufferSize": 512,
+        "uplinkOnly": 5,
+        "downlinkOnly": 30
+      }
+    },
+    "system": {
+      "statsOutboundUplink": true,
+      "statsOutboundDownlink": true
+    }
+  },
+  "finalmask": {
+    "udp": [
+      {
+        "type": "noise",
+        "settings": {
+          "size": "64-128",
+          "count": "3-5"
+        }
+      }
+    ]
+  }
+}
