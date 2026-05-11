@@ -1,2 +1,34 @@
-# InternetkafeXHTTP
-xhttp config remnawave / xhttp когфиг для remnawave 
+# 🍵 InternetkafeXHTTP – Xray конфиг для remnawave с маскировкой под браузер
+
+![Xray](https://img.shields.io/badge/Xray-26.3.27-blue?logo=xray)
+![VLESS](https://img.shields.io/badge/protocol-VLESS-orange)
+![Transport](https://img.shields.io/badge/transport-xHTTP-green)
+![Port](https://img.shields.io/badge/port-47222-yellow)
+![REALITY](https://img.shields.io/badge/security-REALITY-red)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
+
+Готовый серверный конфиг [Xray](https://github.com/XTLS/Xray-core) для создания туннеля, который выглядит как **обычный HTTPS‑трафик браузера** к `sempre.moscow`.  
+Разработан для скрытой передачи трафика там, где DPI блокирует VPN/прокси, но пропускает безобидный веб‑сёрфинг.
+
+---
+
+## ✨ Особенности
+
+- 🎯 **Порт 47222** — нестандартный высокий порт, вне фокуса большинства DPI.
+- 🧠 **REALITY** — заимствует TLS‑сертификат у реального сайта `sempre.moscow`; при активном зондировании сервер отвечает как настоящий веб‑сайт.
+- 🌐 **xHTTP** — упаковывает трафик в HTTP/2‑запросы с браузерными заголовками (User‑Agent, Accept и др.), имитируя обычный веб‑сёрфинг.
+- 🕵️ **FakeDNS** — все реальные DNS‑запросы скрыты внутри зашифрованного туннеля; снаружи ни одной утечки имён.
+- 📡 **UDP Noise** — фоновый UDP‑шум имитирует активность других приложений, размывая статистический профиль туннеля.
+- 🚫 **Блокировка торрентов** — встроенное правило, чтобы не «светить» P2P‑трафик.
+- ⏱️ **Тонкая настройка таймаутов** — `policy` ограничивает время рукопожатия и размеры буфера, приближая поведение к обычному браузеру.
+
+---
+
+## 🔍 Принцип маскировки (что видит DPI)
+
+1. **SYN → SYN‑ACK → ACK** — обычное TCP‑рукопожатие на порт 47222.
+2. **Клиент отправляет TLS Client Hello** — с SNI `sempre.moscow` и браузерным fingerprint `chrome`.
+3. **Сервер отвечает Server Hello** — с настоящим сертификатом `sempre.moscow`, взятым через REALITY.
+4. **Дальнейший обмен** — HTTP/2‑фреймы xHTTP с браузерными заголовками, внутри которых зашифрованные VLESS‑данные.
+
+Для DPI это выглядит как обычный HTTPS‑сеанс пользователя, зашедшего на сайт `sempre.moscow`. Никаких признаков VPN или прокси.
