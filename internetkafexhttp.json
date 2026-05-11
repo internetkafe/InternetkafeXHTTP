@@ -1,6 +1,6 @@
 {
   "log": {
-    "loglevel": "warning"
+    "loglevel": "info"
   },
   "dns": {
     "servers": [
@@ -14,7 +14,7 @@
   },
   "inbounds": [
     {
-      "tag": "sibir",
+      "tag": "internetkafexhttp",
       "port": 47222,
       "listen": "0.0.0.0",
       "protocol": "vless",
